@@ -1,0 +1,29 @@
+library(readxl)
+library(forecast)
+Souvenir <- read_excel("C:/Users/Veere/Downloads/SouvenirSales.xlsx")
+sales.ts <- ts(Souvenir$Sales, start = c(1995,1), end = c(2001, 12), freq = 12) 
+plot(sales.ts, xlab = "Date", ylab = "Sales")
+
+options(scipen=10) 
+plot(sales.ts, xlab = "Date", ylab = "logSales",log="y") 
+
+stepsAhead <- 12 
+nTrain <- length(sales.ts) - stepsAhead 
+train.ts <- window(sales.ts, start = c(1995, 1), end = 
+                     c(1995,nTrain)) 
+valid.ts <- window(sales.ts, start = c(1995, nTrain + 1), 
+                   end = c(1995, nTrain + stepsAhead)) 
+seasonal<-snaive(train.ts, h=frequency(train.ts)) 
+forecast(seasonal) 
+accuracy(forecast(seasonal),valid.ts) 
+hist(seasonal$residuals, ylab = "Frequency", xlab = 
+          "Forecast Error", bty = "l", main = "")
+
+
+
+Shampoo <- read_excel("C:/Users/Veere/Downloads/shampoo.xlsx")
+shampoosales.ts <- ts(Souvenir$Sales, start = c(1995,1), end = c(1997, 12), freq = 12) 
+plot(shampoosales.ts, xlab = "Date", ylab = "Sales")
+
+options(scipen=10) 
+plot(sales.ts, xlab = "Date", ylab = "logSales",log="y") 
